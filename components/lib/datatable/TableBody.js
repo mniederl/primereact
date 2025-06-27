@@ -565,7 +565,6 @@ export const TableBody = React.memo(
         const onRowRightClick = (event) => {
             if (props.onContextMenu || props.onContextMenuSelectionChange) {
                 const hasSelection = ObjectUtils.isNotEmpty(props.selection);
-                const data = event.data;
 
                 if (hasSelection) {
                     DomHandler.clearSelection();
@@ -574,7 +573,7 @@ export const TableBody = React.memo(
                 if (props.onContextMenuSelectionChange) {
                     props.onContextMenuSelectionChange({
                         originalEvent: event.originalEvent,
-                        value: data,
+                        value: event.data,
                         index: event.index
                     });
                 }
@@ -582,8 +581,9 @@ export const TableBody = React.memo(
                 if (props.onContextMenu) {
                     props.onContextMenu({
                         originalEvent: event.originalEvent,
-                        data,
-                        index: event.index
+                        data: event.data, // Row-level data
+                        index: event.index,
+                        cellData: event.cellData // Reuse cell-specific metadata
                     });
                 }
 
@@ -1011,6 +1011,7 @@ export const TableBody = React.memo(
                         cellMemo={props.cellMemo}
                         cellMemoProps={props.cellMemoProps}
                         cellMemoPropsDepth={props.cellMemoPropsDepth}
+                        cellMetadataInContextMenu={props.cellMetadataInContextMenu}
                         cellClassName={props.cellClassName}
                         checkIcon={props.checkIcon}
                         collapsedRowIcon={props.collapsedRowIcon}

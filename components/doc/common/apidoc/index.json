@@ -16660,6 +16660,14 @@
                             "description": "The comparison depth when checking cell props (e.g., rowData) at memoization."
                         },
                         {
+                            "name": "cellMetadataInContextMenu",
+                            "optional": true,
+                            "readonly": false,
+                            "type": "boolean",
+                            "default": "false",
+                            "description": "Whether cell information is available in the row context menu.\nThis is useful when you want to show cell-specific actions in the context menu."
+                        },
+                        {
                             "name": "cellSelection",
                             "optional": false,
                             "readonly": false,
@@ -17636,8 +17644,8 @@
                                 {
                                     "name": "event",
                                     "optional": false,
-                                    "type": "DataTableRowEvent",
-                                    "description": "Custom row event."
+                                    "type": "DataTableContextMenuEvent<TValue>",
+                                    "description": "Custom context menu event."
                                 }
                             ],
                             "returnType": "void",
@@ -18456,7 +18464,7 @@
                     ]
                 },
                 "DataTableRowEvent": {
-                    "description": "Custom context menu event.",
+                    "description": "Base event for row-related events in DataTable.",
                     "relatedProp": "onContextMenu",
                     "props": [
                         {
@@ -18978,6 +18986,77 @@
                         }
                     ],
                     "callbacks": []
+                },
+                "DataTableCellContext": {
+                    "description": "Information about the table cell that triggered a context-menu.\nPresent only when  cellMetadataInContextMenu  is  `true` \n*and* the pointer was inside a  `<td>` .",
+                    "relatedProp": "",
+                    "props": [
+                        {
+                            "name": "cellIndex",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "number",
+                            "description": "Zero-based column index."
+                        },
+                        {
+                            "name": "field",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "string",
+                            "description": "The column’s  `field`  prop."
+                        },
+                        {
+                            "name": "value",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "TValue[number][keyof TValue[number]]",
+                            "description": "The scalar value at  `rowData[field]` ."
+                        },
+                        {
+                            "name": "column",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "Column",
+                            "description": "The  `Column`  instance / props – advanced use."
+                        }
+                    ],
+                    "callbacks": []
+                },
+                "DataTableContextMenuEvent": {
+                    "description": "Custom context menu event.",
+                    "relatedProp": "onContextMenu",
+                    "props": [
+                        {
+                            "name": "data",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "DataTableValue",
+                            "description": "Original rows data."
+                        },
+                        {
+                            "name": "originalEvent",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "MouseEvent<HTMLElement, MouseEvent>",
+                            "description": "Browser event."
+                        },
+                        {
+                            "name": "index",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "number",
+                            "description": "Clicked row data index"
+                        },
+                        {
+                            "name": "cellData",
+                            "optional": true,
+                            "readonly": false,
+                            "type": "DataTableCellContext<TValue>",
+                            "description": "Cell specific data. Present when  `cellMetadataInContextMenu`  is enabled."
+                        }
+                    ],
+                    "callbacks": [],
+                    "extendedTypes": "Omit<DataTableRowEvent, \"originalEvent\">"
                 },
                 "DataTableRowMouseEvent": {
                     "description": "Custom row mouse event.",
@@ -19773,6 +19852,13 @@
                             "readonly": false,
                             "type": "number",
                             "description": "The comparison depth when checking cell props (e.g., rowData) at memoization."
+                        },
+                        {
+                            "name": "cellMetadataInContextMenu",
+                            "optional": true,
+                            "readonly": false,
+                            "type": "boolean",
+                            "description": "Whether cell information is available in the row context menu.\nThis is useful when you want to show cell-specific actions in the context menu."
                         },
                         {
                             "name": "checkIcon",
@@ -20733,8 +20819,8 @@
                                 {
                                     "name": "event",
                                     "optional": false,
-                                    "type": "DataTableRowEvent",
-                                    "description": "Custom row event."
+                                    "type": "DataTableContextMenuEvent<TValue>",
+                                    "description": "Custom context menu event."
                                 }
                             ],
                             "returnType": "void",

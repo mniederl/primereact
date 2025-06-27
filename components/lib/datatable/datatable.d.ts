@@ -426,7 +426,7 @@ interface DataTableSelectAllChangeEvent {
 }
 
 /**
- * Custom context menu event.
+ * Base event for row-related events in DataTable.
  * @see {@link DataTableProps.onContextMenu}, {@link DataTableProps.onRowCollapse}, {@link DataTableProps.onRowExpand}
  * @event
  */
@@ -439,6 +439,50 @@ interface DataTableRowEvent {
      * Original rows data.
      */
     data: DataTableValue;
+}
+
+/**
+ * Information about the table cell that triggered a context-menu.
+ * Present only when {@link DataTableBaseProps.cellMetadataInContextMenu} is `true`
+ * *and* the pointer was inside a `<td>`.
+ */
+export interface DataTableCellContext<TValue extends DataTableValueArray = DataTableValueArray> {
+    /**
+     * Zero-based column index.
+     */
+    cellIndex: number;
+    /**
+     * The column’s `field` prop.
+     */
+    field: string;
+    /**
+     * The scalar value at `rowData[field]`.
+     */
+    value: TValue[number][keyof TValue[number]];
+    /**
+     * The `Column` instance / props – advanced use.
+     */
+    column: Column;
+}
+
+/**
+ * Custom context menu event.
+ * @see {@link DataTableProps.onContextMenu}
+ * @extends DataTableRowEvent
+ */
+interface DataTableContextMenuEvent<TValue extends DataTableValueArray = DataTableValueArray> extends Omit<DataTableRowEvent, 'originalEvent'> {
+    /**
+     * Browser event.
+     */
+    originalEvent: React.MouseEvent<HTMLElement>;
+    /**
+     * Clicked row data index
+     */
+    index: number;
+    /**
+     * Cell specific data. Present when `cellMetadataInContextMenu` is enabled.
+     */
+    cellData?: DataTableCellContext<TValue>;
 }
 
 /**
@@ -1165,6 +1209,12 @@ interface DataTableBaseProps<TValue extends DataTableValueArray> extends Omit<Re
      */
     cellMemoPropsDepth?: number;
     /**
+     * Whether cell information is available in the row context menu.
+     * This is useful when you want to show cell-specific actions in the context menu.
+     * @defaultValue false
+     */
+    cellMetadataInContextMenu?: boolean;
+    /**
      * Icon to display in the checkbox.
      */
     checkIcon?: IconType<DataTableProps<TValue>> | undefined;
@@ -1638,9 +1688,9 @@ interface DataTableBaseProps<TValue extends DataTableValueArray> extends Omit<Re
     onColumnResizerDoubleClick?(event: DataTableColumnResizerClickEvent): void;
     /**
      * Callback to invoke when a context menu is clicked.
-     * @param {DataTableRowEvent} event - Custom row event.
+     * @param {DataTableContextMenuEvent} event - Custom context menu event.
      */
-    onContextMenu?(event: DataTableRowEvent): void;
+    onContextMenu?(event: DataTableContextMenuEvent<TValue>): void;
     /**
      * Callback to invoke on filtering.
      * @param {DataTableStateEvent} event - Custom state event.

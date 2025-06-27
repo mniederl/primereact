@@ -145,7 +145,14 @@ export const BodyRow = React.memo((props) => {
     };
 
     const onRightClick = (event) => {
-        props.onRowRightClick({ originalEvent: event, data: props.rowData, index: props.rowIndex });
+        const rowParams = {
+            originalEvent: event,
+            data: props.rowData,
+            index: props.rowIndex,
+            cellData: event.cellData ?? undefined
+        };
+
+        props.onRowRightClick(rowParams);
     };
 
     const onMouseEnter = (event) => {

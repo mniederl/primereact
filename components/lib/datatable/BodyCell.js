@@ -663,6 +663,18 @@ export const Cell = (props) => {
         );
     };
 
+    const onContextMenu = (event) => {
+        if (props.cellMetadataInContextMenu) {
+            // enrich event with cell data so that it can be used in consumer's context menu
+            event.cellData = {
+                value: props.resolveFieldData(),
+                field: props.field,
+                cellIndex: props.index,
+                column: props.column
+            };
+        }
+    };
+
     return props.getVirtualScrollerOption('loading') ? createLoading() : createElement();
 };
 

@@ -1716,6 +1716,7 @@ export const DataTable = React.forwardRef((inProps, ref) => {
                 cellMemo={props.cellMemo}
                 cellMemoProps={props.cellMemoProps}
                 cellMemoPropsDepth={props.cellMemoPropsDepth}
+                cellMetadataInContextMenu={props.cellMetadataInContextMenu}
                 cellClassName={props.cellClassName}
                 cellSelection={props.cellSelection}
                 checkIcon={props.checkIcon}
@@ -1804,6 +1805,7 @@ export const DataTable = React.forwardRef((inProps, ref) => {
                 cellMemo={props.cellMemo}
                 cellMemoProps={props.cellMemoProps}
                 cellMemoPropsDepth={props.cellMemoPropsDepth}
+                cellMetadataInContextMenu={props.cellMetadataInContextMenu}
                 cellClassName={props.cellClassName}
                 cellSelection={props.cellSelection}
                 checkIcon={props.checkIcon}
