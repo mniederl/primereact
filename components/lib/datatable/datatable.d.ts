@@ -315,23 +315,13 @@ interface DataTableContextMenuMultipleSelectionChangeEvent<TValue extends DataTa
 }
 
 /**
- * Custom multiple selection change event.
- * @see {@link DataTableProps.onSelectionChange}
- * @event
+ * Base interface for selection events in the DataTable component.
  */
-interface DataTableSelectionMultipleChangeEvent<TValue extends DataTableValueArray> {
+interface DataTableSelectionEventBase {
     /**
      * Browser event.
      */
     originalEvent: React.SyntheticEvent;
-    /**
-     * Selection objects.
-     */
-    value: TValue;
-    /**
-     * Type of the selection.
-     */
-    type?: 'multiple' | 'all' | 'checkbox' | 'row' | undefined;
     /**
      * Extra options.
      */
@@ -339,51 +329,67 @@ interface DataTableSelectionMultipleChangeEvent<TValue extends DataTableValueArr
 }
 
 /**
- * Custom single selection change event.
+ * Custom multiple row selection change event.
  * @see {@link DataTableProps.onSelectionChange}
  * @event
  */
-interface DataTableSelectionSingleChangeEvent<TValue extends DataTableValueArray> {
+interface DataTableSelectionRowMultipleChangeEvent<TValue extends DataTableValueArray> extends DataTableSelectionEventBase {
     /**
-     * Browser event.
+     * Selection objects (array of rows).
      */
-    originalEvent: React.SyntheticEvent;
+    value: TValue;
     /**
-     * Selection object.
+     * Type of the selection.
+     */
+    type?: 'multiple' | 'all' | 'checkbox' | 'row';
+}
+
+/**
+ * Custom single row selection change event.
+ * @see {@link DataTableProps.onSelectionChange}
+ * @event
+ */
+interface DataTableSelectionRowSingleChangeEvent<TValue extends DataTableValueArray> extends DataTableSelectionEventBase {
+    /**
+     * Selection object (single row).
      */
     value: TValue[number];
     /**
      * Type of the selection.
      */
     type?: 'single' | 'radio' | 'row';
-    /**
-     * Extra options.
-     */
-    [key: string]: any;
 }
 
 /**
- * Custom cell single selection change event.
+ * Custom multiple cell selection change event.
  * @see {@link DataTableProps.onSelectionChange}
  * @event
  */
-interface DataTableSelectionCellSingleChangeEvent<TValue extends DataTableValueArray> {
+interface DataTableSelectionCellMultipleChangeEvent<TValue extends DataTableValueArray> extends DataTableSelectionEventBase {
     /**
-     * Browser event.
+     * Selection objects (array of cells).
      */
-    originalEvent: React.SyntheticEvent;
+    value: DataTableCellSelection<TValue>[];
     /**
-     * Selection objects.
+     * Type of the selection.
+     */
+    type?: 'cell';
+}
+
+/**
+ * Custom single cell selection change event.
+ * @see {@link DataTableProps.onSelectionChange}
+ * @event
+ */
+interface DataTableSelectionCellSingleChangeEvent<TValue extends DataTableValueArray> extends DataTableSelectionEventBase {
+    /**
+     * Selection object (single cell).
      */
     value: DataTableCellSelection<TValue>;
     /**
      * Type of the selection.
      */
     type?: 'cell';
-    /**
-     * Extra options.
-     */
-    [key: string]: any;
 }
 
 /**
@@ -1865,7 +1871,7 @@ interface DataTableBaseProps<TValue extends DataTableValueArray> extends Omit<Re
  * Defines valid properties in DataTable component. In addition to these, all properties of HTMLDivElement can be used in this component.
  * @group Properties
  */
-interface DataTablePropsSingle<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
+interface DataTablePropsSelectionRowSingle<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
     /**
      * Whether to cell selection is enabled or not.
      * @defaultValue false
@@ -1886,16 +1892,16 @@ interface DataTablePropsSingle<TValue extends DataTableValueArray> extends DataT
     onContextMenuSelectionChange?(event: DataTableContextMenuSingleSelectionChangeEvent<TValue>): void;
     /**
      * Callback to invoke when selection changes.
-     * @param {DataTableSelectionSingleChangeEvent<TValue>} event - Custom selection change event.
+     * @param {DataTableSelectionRowSingleChangeEvent<TValue>} event - Custom selection change event.
      */
-    onSelectionChange?(event: DataTableSelectionSingleChangeEvent<TValue>): void;
+    onSelectionChange?(event: DataTableSelectionRowSingleChangeEvent<TValue>): void;
 }
 
 /**
  * Defines valid properties in DataTable component. In addition to these, all properties of HTMLDivElement can be used in this component.
  * @group Properties
  */
-interface DataTablePropsMultiple<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
+interface DataTablePropsSelectionRowMultiple<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
     /**
      * Whether to cell selection is enabled or not.
      * @defaultValue false
@@ -1916,16 +1922,16 @@ interface DataTablePropsMultiple<TValue extends DataTableValueArray> extends Dat
     onContextMenuSelectionChange?(event: DataTableContextMenuMultipleSelectionChangeEvent<TValue>): void;
     /**
      * Callback to invoke when selection changes.
-     * @param {DataTableSelectionMultipleChangeEvent<TValue>} event - Custom selection change event.
+     * @param {DataTableSelectionRowMultipleChangeEvent<TValue>} event - Custom selection change event.
      */
-    onSelectionChange?(event: DataTableSelectionMultipleChangeEvent<TValue>): void;
+    onSelectionChange?(event: DataTableSelectionRowMultipleChangeEvent<TValue>): void;
 }
 
 /**
  * Defines valid properties in DataTable component. In addition to these, all properties of HTMLDivElement can be used in this component.
  * @group Properties
  */
-interface DataTablePropsCellSingle<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
+interface DataTablePropsSelectionCellSingle<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
     /**
      * Whether to cell selection is enabled or not.
      * @defaultValue false
@@ -1955,7 +1961,7 @@ interface DataTablePropsCellSingle<TValue extends DataTableValueArray> extends D
  * Defines valid properties in DataTable component. In addition to these, all properties of HTMLDivElement can be used in this component.
  * @group Properties
  */
-interface DataTablePropsCellMultiple<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
+interface DataTablePropsSelectionCellMultiple<TValue extends DataTableValueArray> extends DataTableBaseProps<TValue> {
     /**
      * Whether to cell selection is enabled or not.
      * @defaultValue false
@@ -1968,7 +1974,7 @@ interface DataTablePropsCellMultiple<TValue extends DataTableValueArray> extends
     /**
      * Selected cells.
      */
-    selection: Array<DataTableCellSelection<TValue>> | null;
+    selection: DataTableCellSelection<TValue>[] | null;
     /**
      * Callback to invoke when a row selected with right click.
      * @param {DataTableRowEvent} event - Custom row event.
@@ -1985,7 +1991,7 @@ interface DataTablePropsCellMultiple<TValue extends DataTableValueArray> extends
  * Defines valid properties in DataTable component. In addition to these, all properties of HTMLDivElement can be used in this component.
  * @group Properties
  */
-export type DataTableProps<TValue extends DataTableValueArray> = DataTablePropsSingle<TValue> | DataTablePropsCellSingle<TValue> | DataTablePropsMultiple<TValue> | DataTablePropsCellMultiple<TValue>;
+export type DataTableProps<TValue extends DataTableValueArray> = DataTablePropsSelectionRowSingle<TValue> | DataTablePropsSelectionRowMultiple<TValue> | DataTablePropsSelectionCellSingle<TValue> | DataTablePropsSelectionCellMultiple<TValue>;
 
 /**
  * **PrimeReact - DataTable<TValue**

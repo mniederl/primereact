@@ -610,6 +610,7 @@ export const BodyRow = React.memo((props) => {
                     cellMemo: props.cellMemo,
                     cellMemoProps: props.cellMemoProps,
                     cellMemoPropsDepth: props.cellMemoPropsDepth,
+                    cellMetadataInContextMenu: props.cellMetadataInContextMenu,
                     cellClassName: props.cellClassName,
                     checkIcon: props.checkIcon,
                     collapsedRowIcon: props.collapsedRowIcon,

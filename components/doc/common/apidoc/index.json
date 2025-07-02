@@ -17930,7 +17930,7 @@
                                 {
                                     "name": "event",
                                     "optional": false,
-                                    "type": "DataTableSelectionCellMultipleChangeEvent<TValue>",
+                                    "type": "DataTableSelectionRowMultipleChangeEvent<TValue>",
                                     "description": "Custom selection change event."
                                 }
                             ],
@@ -18355,8 +18355,8 @@
                         }
                     ]
                 },
-                "DataTableSelectionMultipleChangeEvent": {
-                    "description": "Custom multiple selection change event.",
+                "DataTableSelectionRowMultipleChangeEvent": {
+                    "description": "Custom multiple row selection change event.",
                     "relatedProp": "DataTableProps.onSelectionChange",
                     "props": [
                         {
@@ -18371,7 +18371,7 @@
                             "optional": false,
                             "readonly": false,
                             "type": "TValue",
-                            "description": "Selection objects."
+                            "description": "Selection objects (array of rows)."
                         },
                         {
                             "name": "type",
@@ -18382,8 +18382,8 @@
                         }
                     ]
                 },
-                "DataTableSelectionSingleChangeEvent": {
-                    "description": "Custom single selection change event.",
+                "DataTableSelectionRowSingleChangeEvent": {
+                    "description": "Custom single row selection change event.",
                     "relatedProp": "DataTableProps.onSelectionChange",
                     "props": [
                         {
@@ -18398,7 +18398,7 @@
                             "optional": false,
                             "readonly": false,
                             "type": "TValue[number]",
-                            "description": "Selection object."
+                            "description": "Selection object (single row)."
                         },
                         {
                             "name": "type",
@@ -18409,8 +18409,35 @@
                         }
                     ]
                 },
+                "DataTableSelectionCellMultipleChangeEvent": {
+                    "description": "Custom multiple cell selection change event.",
+                    "relatedProp": "DataTableProps.onSelectionChange",
+                    "props": [
+                        {
+                            "name": "originalEvent",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "SyntheticEvent<Element, Event>",
+                            "description": "Browser event."
+                        },
+                        {
+                            "name": "value",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "DataTableCellSelection<TValue>[]",
+                            "description": "Selection objects (array of cells)."
+                        },
+                        {
+                            "name": "type",
+                            "optional": true,
+                            "readonly": false,
+                            "type": "\"cell\"",
+                            "description": "Type of the selection."
+                        }
+                    ]
+                },
                 "DataTableSelectionCellSingleChangeEvent": {
-                    "description": "Custom cell single selection change event.",
+                    "description": "Custom single cell selection change event.",
                     "relatedProp": "DataTableProps.onSelectionChange",
                     "props": [
                         {
@@ -18425,7 +18452,7 @@
                             "optional": false,
                             "readonly": false,
                             "type": "DataTableCellSelection<TValue>",
-                            "description": "Selection objects."
+                            "description": "Selection object (single cell)."
                         },
                         {
                             "name": "type",
@@ -18965,6 +18992,27 @@
                         }
                     ],
                     "callbacks": []
+                },
+                "DataTableSelectionEventBase": {
+                    "description": "Base interface for selection events in the DataTable component.",
+                    "relatedProp": "",
+                    "props": [
+                        {
+                            "name": "originalEvent",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "SyntheticEvent<Element, Event>",
+                            "description": "Browser event."
+                        },
+                        {
+                            "name": "[key: string]",
+                            "optional": false,
+                            "readonly": false,
+                            "type": "any"
+                        }
+                    ],
+                    "callbacks": [],
+                    "extendedBy": "DataTableSelectionRowMultipleChangeEvent,DataTableSelectionRowSingleChangeEvent,DataTableSelectionCellMultipleChangeEvent,DataTableSelectionCellSingleChangeEvent"
                 },
                 "DataTableSelectAllChangeEvent": {
                     "description": "Custom select all change event.",
@@ -21232,7 +21280,7 @@
                             "description": "Function that returns a boolean by passing the row data to decide if the radio or checkbox should be displayed per row."
                         }
                     ],
-                    "extendedBy": "DataTablePropsSingle,DataTablePropsMultiple,DataTablePropsCellSingle,DataTablePropsCellMultiple",
+                    "extendedBy": "DataTablePropsSelectionRowSingle,DataTablePropsSelectionRowMultiple,DataTablePropsSelectionCellSingle,DataTablePropsSelectionCellMultiple",
                     "extendedTypes": "Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLDivElement>, HTMLDivElement>, \"size\" | \"onContextMenu\" | \"ref\" | \"value\">"
                 }
             }

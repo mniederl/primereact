@@ -640,6 +640,7 @@ export const Cell = (props) => {
                 tabIndex,
                 role: 'cell',
                 onClick: (e) => onClick(e),
+                onContextMenu: (e) => onContextMenu(e),
                 onKeyDown: (e) => onKeyDown(e),
                 onBlur: (e) => onBlur(e),
                 onMouseDown: (e) => onMouseDown(e),
