@@ -75,6 +75,13 @@ export const Cell = (props) => {
         return elementRef.current && !(elementRef.current.isSameNode(target) || elementRef.current.contains(target));
     };
 
+    const changeTabIndex = (currentElement, nextElement) => {
+        if (currentElement && nextElement) {
+            currentElement.tabIndex = -1;
+            nextElement.tabIndex = props.tabIndex;
+        }
+    };
+
     const getStyle = () => {
         const bodyStyle = getColumnProp('bodyStyle');
         const columnStyle = getColumnProp('style');
@@ -221,7 +228,7 @@ export const Cell = (props) => {
                     break;
 
                 case 'ArrowUp':
-                    let upCell = props.findUpSelectableCell(cell, index);
+                    let upCell = props.findUpSelectableCell(cell, props.index);
 
                     if (upCell) {
                         changeTabIndex(cell, upCell);
@@ -232,7 +239,7 @@ export const Cell = (props) => {
                     break;
 
                 case 'ArrowDown':
-                    let downCell = props.findDownSelectableCell(cell, index);
+                    let downCell = props.findDownSelectableCell(cell, props.index);
 
                     if (downCell) {
                         changeTabIndex(cell, downCell);
